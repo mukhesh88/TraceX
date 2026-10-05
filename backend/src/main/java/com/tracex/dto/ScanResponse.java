@@ -13,6 +13,7 @@ public class ScanResponse {
     private double inferenceLatencyMs;
     private FeatureSummaryDto features;
     private Instant timestamp;
+    private Boolean fallbackUsed;
 
     public ScanResponse() {
     }
@@ -25,6 +26,12 @@ public class ScanResponse {
         this.inferenceLatencyMs = inferenceLatencyMs;
         this.features = features;
         this.timestamp = timestamp;
+    }
+
+    public ScanResponse(String url, String status, float riskScore, double inferenceLatencyMs,
+                        FeatureSummaryDto features, Instant timestamp, Boolean fallbackUsed) {
+        this(url, status, riskScore, inferenceLatencyMs, features, timestamp);
+        this.fallbackUsed = fallbackUsed;
     }
 
     public String getUrl() { return url; }
@@ -44,4 +51,7 @@ public class ScanResponse {
 
     public Instant getTimestamp() { return timestamp; }
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
+
+    public Boolean getFallbackUsed() { return fallbackUsed; }
+    public void setFallbackUsed(Boolean fallbackUsed) { this.fallbackUsed = fallbackUsed; }
 }

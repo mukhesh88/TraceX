@@ -181,6 +181,7 @@ export default function SandboxScanner({ onScanComplete }) {
                 score={scanResult.riskScore}
                 status={scanResult.status}
                 latency={scanResult.inferenceLatencyMs}
+                isFallback={Boolean(scanResult.fallbackUsed)}
               />
             </div>
 

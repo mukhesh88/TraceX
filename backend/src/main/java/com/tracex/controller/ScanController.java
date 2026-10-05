@@ -98,7 +98,8 @@ public class ScanController {
             inference.getRiskScore(),
             inference.getInferenceLatencyMs(),
             summary,
-            now
+            now,
+            inference.isFallbackUsed()
         );
 
         return ResponseEntity.ok(response);
