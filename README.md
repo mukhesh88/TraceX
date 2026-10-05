@@ -20,7 +20,8 @@ TraceX is an edge-optimized, real-time phishing detection and lexical URL forens
 | :--- | :--- | :--- |
 | **Backend** | Spring Boot 3.x, Spring Data JPA, Hibernate, Maven | Java 17 / Java 21 |
 | **ML Engine** | ONNX Runtime Java (`1.18.0`) + Heuristic Fallback | Pre-warmed singleton `OrtSession` |
-| **Persistence** | H2 In-Memory (Dev) & PostgreSQL (Prod profile) | JPA Repository |
+| **Persistence** | Supabase PostgreSQL + H2 In-Memory (Dev) | PostgreSQL / JPA Repository |
+| **Auth & CRUD** | Supabase Auth + `@supabase/supabase-js` | Email/Password & Threat Watchlist CRUD |
 | **Frontend** | Next.js 14, React 18, Tailwind CSS, Lucide Icons | **Pure JavaScript / JSX strictly (No TypeScript)** |
 | **Extension** | Chrome / Edge Manifest V3 | Pure Vanilla JavaScript |
 
@@ -46,7 +47,29 @@ TraceX is an edge-optimized, real-time phishing detection and lexical URL forens
 
 ## Quickstart Guide
 
-### 1. Run the Spring Boot Microservice
+### 🚀 One-Click Launch (Windows)
+Double-click `run.bat` or execute from terminal:
+```cmd
+run.bat
+```
+This automatically:
+- Detects and validates Java (17/21) and Node.js environments.
+- Checks and verifies backend binaries and frontend dependencies (`npm install`).
+- Launches the **Spring Boot Microservice** on `http://localhost:8080`.
+- Launches the **Next.js Dashboard** on `http://localhost:3000`.
+- Automatically opens `http://localhost:3000` in your default browser.
+- Provides interactive commands to run latency benchmarks, open the H2 console, or stop services.
+
+To stop all services cleanly at any time, run:
+```cmd
+stop.bat
+```
+
+---
+
+### Manual Launch
+
+#### 1. Run the Spring Boot Microservice
 ```bash
 cd backend
 mvn clean package -DskipTests
@@ -62,7 +85,18 @@ npm run dev
 ```
 *Frontend runs on `http://localhost:3000`.*
 
-### 3. Load the Chrome/Edge Browser Extension
+### 3. Connect Supabase Database & Auth (Optional for Live DB)
+TraceX includes **Instant Demo Mode** out of the box with local storage fallback. To connect a live Supabase PostgreSQL database:
+1. Create a project at [supabase.com](https://supabase.com).
+2. Go to **SQL Editor** and run the contents of [`supabase/schema.sql`](supabase/schema.sql) to create the `watchlist` table and Row-Level Security (RLS) policies.
+3. In `frontend/.env.local`, set your Supabase API credentials:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+   ```
+4. Restart `npm run dev`. You can now sign up, log in, and perform real-time **Create, Read, Update, Delete (CRUD)** operations on your monitored threats.
+
+### 4. Load the Chrome/Edge Browser Extension
 1. Open Google Chrome or Microsoft Edge and navigate to `chrome://extensions` (or `edge://extensions`).
 2. Enable **Developer mode** toggle in the top-right corner.
 3. Click **Load unpacked**.
