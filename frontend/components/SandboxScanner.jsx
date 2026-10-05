@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, ShieldAlert, ArrowRight, Sparkles, AlertTriangle, ExternalLink } from 'lucide-react';
+import { Search, ShieldAlert, ArrowRight, Sparkles, AlertTriangle, ExternalLink, BookmarkPlus, Check } from 'lucide-react';
 import RiskGauge from './RiskGauge';
 import FeatureMatrix from './FeatureMatrix';
+import { createWatchlistItem } from '../lib/watchlistService';
+import { useAuth } from '../context/AuthContext';
 
 const SAMPLE_PRESETS = [
   {
@@ -45,14 +47,37 @@ const SAMPLE_PRESETS = [
 
 export default function SandboxScanner({ onScanComplete }) {
   const [url, setUrl] = useState('https://secure-login.apple-support-verify.com/auth');
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [scanResult, setScanResult] = useState(null);
+  const [addedToWatchlist, setAddedToWatchlist] = useState(false);
+  const [addingToWatchlist, setAddingToWatchlist] = useState(false);
+
+  const handleAddToWatchlist = async () => {
+    if (!scanResult) return;
+    setAddingToWatchlist(true);
+    try {
+      await createWatchlistItem({
+        url: scanResult.url,
+        threat_level: scanResult.status === 'MALICIOUS' ? (scanResult.riskScore >= 0.85 ? 'CRITICAL' : 'HIGH') : 'BENIGN',
+        notes: `Scanned via Sandbox (${scanResult.status} with ${(scanResult.riskScore * 100).toFixed(1)}% score)`,
+        risk_score: scanResult.riskScore,
+        is_active: true,
+      }, user?.id);
+      setAddedToWatchlist(true);
+    } catch (e) {
+      console.warn('Failed to add to watchlist:', e);
+    } finally {
+      setAddingToWatchlist(false);
+    }
+  };
 
   const handleScan = async (targetUrl = url) => {
     if (!targetUrl || !targetUrl.trim()) return;
     setLoading(true);
     setError(null);
+    setAddedToWatchlist(false);
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
@@ -174,6 +199,38 @@ export default function SandboxScanner({ onScanComplete }) {
       {/* Results Section */}
       {scanResult && (
         <div className="space-y-6">
+          {/* Action Bar: URL summary & Save to Supabase Watchlist */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-[#0d1527] border border-slate-800 rounded-2xl shadow-xl">
+            <div className="flex items-center space-x-2 truncate">
+              <span className="text-xs font-mono uppercase text-slate-400">Scanned Target:</span>
+              <span className="text-xs font-mono font-bold text-cyan-400 truncate max-w-sm sm:max-w-md">
+                {scanResult.url}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={handleAddToWatchlist}
+              disabled={addedToWatchlist || addingToWatchlist}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all border flex items-center space-x-1.5 ${
+                addedToWatchlist
+                  ? 'bg-emerald-950/80 text-emerald-300 border-emerald-800'
+                  : 'bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border-slate-700'
+              }`}
+            >
+              {addedToWatchlist ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Saved to Supabase Watchlist</span>
+                </>
+              ) : (
+                <>
+                  <BookmarkPlus className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>{addingToWatchlist ? 'Saving...' : 'Add to Supabase Watchlist'}</span>
+                </>
+              )}
+            </button>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left: SVG Gauge & Assessment */}
             <div className="lg:col-span-1">
