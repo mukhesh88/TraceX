@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import SandboxScanner from '../components/SandboxScanner';
 import TelemetryDashboard from '../components/TelemetryDashboard';
-import { ShieldCheck, Crosshair, BarChart3, Lock, Zap, CheckCircle2 } from 'lucide-react';
+import WatchlistManager from '../components/WatchlistManager';
+import { ShieldCheck, Crosshair, BarChart3, Lock, Zap, CheckCircle2, Database, BookmarkCheck } from 'lucide-react';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('sandbox');
@@ -45,15 +46,15 @@ export default function HomePage() {
               <span>12 Lexical Vectors</span>
             </div>
             <div className="flex items-center space-x-1.5 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Manifest V3 Interceptor</span>
+              <Database className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Supabase Threat Watchlist</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex items-center space-x-2 border-b border-slate-800 pb-2">
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-800 pb-2">
         <button
           onClick={() => setActiveTab('sandbox')}
           className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl font-mono text-xs font-bold transition-all ${
@@ -64,6 +65,18 @@ export default function HomePage() {
         >
           <Crosshair className="w-4 h-4" />
           <span>SANDBOX SCANNER</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('watchlist')}
+          className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl font-mono text-xs font-bold transition-all ${
+            activeTab === 'watchlist'
+              ? 'bg-cyan-500 text-black shadow-lg shadow-cyan-500/25'
+              : 'text-slate-400 hover:text-white hover:bg-slate-900'
+          }`}
+        >
+          <Database className="w-4 h-4" />
+          <span>THREAT WATCHLIST & RULES (CRUD)</span>
         </button>
 
         <button
@@ -80,7 +93,7 @@ export default function HomePage() {
       </div>
 
       {/* Tab Contents */}
-      {activeTab === 'sandbox' ? (
+      {activeTab === 'sandbox' && (
         <div className="space-y-12">
           <SandboxScanner onScanComplete={handleScanCompleted} />
           <div className="pt-6 border-t border-slate-800/80">
@@ -90,7 +103,13 @@ export default function HomePage() {
             <TelemetryDashboard refreshTrigger={refreshTrigger} />
           </div>
         </div>
-      ) : (
+      )}
+
+      {activeTab === 'watchlist' && (
+        <WatchlistManager />
+      )}
+
+      {activeTab === 'telemetry' && (
         <TelemetryDashboard refreshTrigger={refreshTrigger} />
       )}
     </div>
