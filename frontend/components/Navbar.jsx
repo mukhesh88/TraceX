@@ -3,10 +3,11 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
-import { Shield, User, LogIn, LogOut, Database, Sparkles, CheckCircle2 } from 'lucide-react';
+import ExtensionInstallModal from './ExtensionInstallModal';
+import { Shield, User, LogIn, LogOut, Database, Sparkles, CheckCircle2, ShieldAlert } from 'lucide-react';
 
 export default function Navbar() {
-  const { user, signOut, setAuthModalOpen, setAuthMode, isConfigured } = useAuth();
+  const { user, signOut, setAuthModalOpen, setAuthMode, isConfigured, setExtensionModalOpen } = useAuth();
 
   return (
     <>
@@ -40,6 +41,18 @@ export default function Navbar() {
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
               <span className="text-emerald-400 font-semibold">ENGINE ONLINE</span>
             </div>
+
+            {/* Add Extension Button */}
+            <button
+              type="button"
+              onClick={() => setExtensionModalOpen(true)}
+              className="px-3 py-1.5 rounded-xl bg-cyan-950/50 hover:bg-cyan-900/60 text-cyan-400 hover:text-cyan-300 border border-cyan-800/80 hover:border-cyan-600 transition-all flex items-center space-x-1.5 font-bold shadow-sm shadow-cyan-950 cursor-pointer"
+              title="Add TraceX Extension directly to your browser"
+            >
+              <ShieldAlert className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="hidden xs:inline">ADD EXTENSION</span>
+              <span className="xs:hidden">EXTENSION</span>
+            </button>
 
             <span className="hidden sm:inline text-slate-700">|</span>
 
@@ -86,6 +99,9 @@ export default function Navbar() {
 
       {/* Global Auth Modal */}
       <AuthModal />
+
+      {/* Global Extension Installation Modal */}
+      <ExtensionInstallModal />
     </>
   );
 }

@@ -4,11 +4,13 @@ import React, { useState } from 'react';
 import SandboxScanner from '../components/SandboxScanner';
 import TelemetryDashboard from '../components/TelemetryDashboard';
 import WatchlistManager from '../components/WatchlistManager';
-import { ShieldCheck, Crosshair, BarChart3, Lock, Zap, CheckCircle2, Database, BookmarkCheck } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { ShieldCheck, Crosshair, BarChart3, Lock, Zap, CheckCircle2, Database, BookmarkCheck, Download, ShieldAlert, ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('sandbox');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const { setExtensionModalOpen } = useAuth();
 
   const handleScanCompleted = () => {
     // Trigger telemetry table update
@@ -35,6 +37,28 @@ export default function HomePage() {
             TraceX analyzes 12 static lexical, statistical, and structural features directly on the edge.
             Detect homograph spoofing, credential harvest pathing, and entropy anomalies in under 5 milliseconds—before any socket is established.
           </p>
+
+          {/* CTA Action Buttons */}
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setExtensionModalOpen(true)}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-extrabold text-xs font-mono shadow-lg shadow-cyan-500/25 flex items-center space-x-2 transition-all cursor-pointer"
+            >
+              <ShieldAlert className="w-4 h-4 text-black" />
+              <span>ADD EXTENSION TO BROWSER</span>
+              <ArrowRight className="w-3.5 h-3.5 text-black" />
+            </button>
+
+            <a
+              href="/tracex-extension.zip"
+              download="tracex-extension.zip"
+              className="px-4 py-2.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-cyan-400 hover:text-cyan-300 font-bold text-xs font-mono border border-slate-800 hover:border-cyan-800/80 flex items-center space-x-1.5 transition-all"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>DIRECT DOWNLOAD (.ZIP)</span>
+            </a>
+          </div>
 
           <div className="mt-6 flex flex-wrap gap-4 text-xs font-mono text-slate-300">
             <div className="flex items-center space-x-1.5 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800">

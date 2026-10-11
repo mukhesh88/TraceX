@@ -1,6 +1,6 @@
-// TraceX Manifest V3 Background Service Worker (Vanilla JavaScript)
-
-const BACKEND_SCAN_URL = 'http://localhost:8080/api/v1/scan';
+const PROD_BACKEND_URL = 'https://tracex-backend-s6kq.onrender.com/api/v1/scan';
+const LOCAL_BACKEND_URL = 'http://localhost:8080/api/v1/scan';
+const BACKEND_SCAN_URL = PROD_BACKEND_URL;
 
 // Fast in-memory cache to prevent redundant scans and sub-millisecond execution
 const benignCache = new Set();

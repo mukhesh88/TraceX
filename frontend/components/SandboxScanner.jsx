@@ -47,7 +47,7 @@ const SAMPLE_PRESETS = [
 
 export default function SandboxScanner({ onScanComplete }) {
   const [url, setUrl] = useState('https://secure-login.apple-support-verify.com/auth');
-  const { user } = useAuth();
+  const { user, setExtensionModalOpen } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [scanResult, setScanResult] = useState(null);
@@ -120,9 +120,19 @@ export default function SandboxScanner({ onScanComplete }) {
             Lexical Forensics Sandbox Scanner
           </h2>
         </div>
-        <p className="text-xs text-slate-400 mb-6">
-          Inspects structural, statistical, and lexical indicators without making any DNS requests or HTTP connections.
-        </p>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-5 bg-gradient-to-r from-cyan-950/40 to-slate-900 border border-cyan-800/40 px-4 py-2.5 rounded-xl text-xs">
+          <span className="text-slate-300">
+            Want zero-day protection while browsing in Chrome or Edge?
+          </span>
+          <button
+            type="button"
+            onClick={() => setExtensionModalOpen(true)}
+            className="text-cyan-400 hover:text-cyan-300 font-bold underline cursor-pointer flex items-center space-x-1 shrink-0"
+          >
+            <span>Add Browser Extension</span>
+            <ExternalLink className="w-3 h-3 ml-0.5" />
+          </button>
+        </div>
 
         <form
           onSubmit={(e) => {

@@ -6,6 +6,7 @@ target/
 *.nar
 *.ear
 *.zip
+!frontend/public/*.zip
 *.tar.gz
 *.rar
 

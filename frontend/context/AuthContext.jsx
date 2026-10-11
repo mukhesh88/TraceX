@@ -15,6 +15,8 @@ const AuthContext = createContext({
   setAuthModalOpen: () => {},
   authMode: 'login',
   setAuthMode: () => {},
+  extensionModalOpen: false,
+  setExtensionModalOpen: () => {},
 });
 
 export const AuthProvider = ({ children }) => {
@@ -23,6 +25,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login');
+  const [extensionModalOpen, setExtensionModalOpen] = useState(false);
   const configured = isSupabaseConfigured();
 
   useEffect(() => {
@@ -165,6 +168,8 @@ export const AuthProvider = ({ children }) => {
         setAuthModalOpen,
         authMode,
         setAuthMode,
+        extensionModalOpen,
+        setExtensionModalOpen,
       }}
     >
       {children}
